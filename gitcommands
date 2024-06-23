@@ -16,3 +16,16 @@ git push -u origin main
 git remote add origin https://github.com/jaiwal-keshav/CEO.git
 git branch -M main
 git push -u origin main
+
+
+
+
+
+
+for collabrators
+
+git fetch origin
+git checkout -b basicFiles origin/basicFiles
+git add .
+git commit -m "Descriptive commit message"
+git push origin basicFiles
