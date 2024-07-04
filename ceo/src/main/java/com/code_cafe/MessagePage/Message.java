@@ -22,21 +22,41 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
+import com.code_cafe.Database.User;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
+
 public class Message extends Application {
 
-    private ObservableList<FeedItem> feedItems = FXCollections.observableArrayList(
-            new FeedItem("Janhavi", "Description 1", new Image("/assets/images/User1.jpeg")),
-            new FeedItem("Keshav", "Description 2", new Image("/assets/images/User2.jpeg")),
-            new FeedItem("Swapnali", "Description 3", new Image("/assets/images/User3.jpeg")),
-            new FeedItem("Bharati", "Description 4", new Image("/assets/images/User4.jpeg")),
-            new FeedItem("Kartik", "Description 5", new Image("/assets/images/User5.jpeg")),
-            new FeedItem("Raj", "Description 6", new Image("/assets/images/User6.jpeg")),
-            new FeedItem("Manasvi", "Description 7", new Image("/assets/images/User7.jpeg")),
-            new FeedItem("Riya", "Description 8", new Image("/assets/images/User8.jpeg")),
-            new FeedItem("Tanvi", "Description 9", new Image("/assets/images/User9.jpeg")),
-            new FeedItem("Jyoti", "Description 10", new Image("/assets/images/User10.jpeg"))
-            // Add more feed items as needed
-    );
+    // private ObservableList<FeedItem> feedItems = FXCollections.observableArrayList(
+    //         // new FeedItem("Janhavi", "Description 1", new Image("/assets/images/User1.jpeg")),
+    //         // new FeedItem("Keshav", "Description 2", new Image("/assets/images/User2.jpeg")),
+    //         // new FeedItem("Swapnali", "Description 3", new Image("/assets/images/User3.jpeg")),
+    //         // new FeedItem("Bharati", "Description 4", new Image("/assets/images/User4.jpeg")),
+    //         // new FeedItem("Kartik", "Description 5", new Image("/assets/images/User5.jpeg")),
+    //         // new FeedItem("Raj", "Description 6", new Image("/assets/images/User6.jpeg")),
+    //         // new FeedItem("Manasvi", "Description 7", new Image("/assets/images/User7.jpeg")),
+    //         // new FeedItem("Riya", "Description 8", new Image("/assets/images/User8.jpeg")),
+    //         // new FeedItem("Tanvi", "Description 9", new Image("/assets/images/User9.jpeg")),
+    //         // new FeedItem("Jyoti", "Description 10", new Image("/assets/images/User10.jpeg"))
+    //         // Add more feed items as needed
+
+    // );
+
+    public ObservableList<FeedItem> feedItems = FXCollections.observableArrayList();
 
     private TextArea chatMessages; // Declare chatMessages as a class-level variable
     private Label chatLabel;
@@ -46,6 +66,7 @@ public class Message extends Application {
         primaryStage.setTitle("ChatBox");
 
         BorderPane root = new BorderPane();
+        callApi();
 
         // Left side - User list
         ListView<FeedItem> userList = setupUserList();
@@ -97,6 +118,9 @@ public class Message extends Application {
                 messageInput.clear();
             }
         });
+
+       
+
 
         // Display initial chat label
         chatLabel = new Label("Select a user to start chatting.");
@@ -217,6 +241,45 @@ public class Message extends Application {
         public Image getImage() {
             return image;
         }
+    }
+
+
+    private void callApi() {
+        new Thread(() -> {
+            try {
+                String apiUrl = "https://brickzoneprop.com/WomenEM/APIS/getUsers1.php"; // Replace with your API URL
+                URL url = new URL(apiUrl);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+
+                int responseCode = conn.getResponseCode();
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    String inputLine;
+                    StringBuilder response = new StringBuilder();
+
+                    while ((inputLine = in.readLine()) != null) {
+                        response.append(inputLine);
+                    }
+                    in.close();
+
+                    // Parse JSON response to List<User>
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    List<User> users = Arrays.asList(objectMapper.readValue(response.toString(), User[].class));
+
+                    for(User user : users) {
+                        System.out.println(user.getAge() + " " + user.getUserName());
+                        feedItems.add(new FeedItem(user.getUserName(), "Description 1", new Image("/assets/images/User1.jpeg")));
+                    }
+                    // Update the UI with the response
+                    //Platform.runLater(() -> responseLabel.setText(users.toString()));
+                } else {
+                   // Platform.runLater(() -> responseLabel.setText("GET request failed: " + responseCode));
+                }
+            } catch (Exception e) {
+                //Platform.runLater(() -> responseLabel.setText("Exception: " + e.getMessage()));
+            }
+        }).start();
     }
 }
 

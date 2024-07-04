@@ -1,6 +1,18 @@
 package com.code_cafe.HomePage;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
+
+import com.code_cafe.Database.User;
+import com.code_cafe.Database.Post;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -27,17 +39,17 @@ import javafx.stage.Stage;
 
 public class Home extends Application {
 
-    Label lb1 = new Label("Keshav");
-    Label lb2 = new Label("Jaiwal");
-    Label lb3 = new Label("Jaiwal");
-    Label lb4 = new Label("Janhavi");
-    Image image = new Image("assets/image.png"); // Ensure the path is correct
-
+    // Label lb1 = new Label("Keshav");
+    // Label lb2 = new Label("Jaiwal");
+    // Label lb3 = new Label("Jaiwal");
+    // Label lb4 = new Label("Janhavi");
+    // Image image = new Image("assets/image.png"); // Ensure the path is correct
+    
     private ObservableList<FeedItem> feedItems = FXCollections.observableArrayList(
-        new FeedItem("User1", lb1.getText(), image),
-        new FeedItem("User2", lb2.getText(), image),
-        new FeedItem("User3", lb3.getText(), image),
-        new FeedItem("User4", lb4.getText(), image)
+        // new FeedItem("User1", lb1.getText(), image),
+        // new FeedItem("User2", lb2.getText(), image),
+        // new FeedItem("User3", lb3.getText(), image),
+        // new FeedItem("User4", lb4.getText(), image)
     );
 
     private StackPane mainContent = new StackPane();
@@ -46,6 +58,9 @@ public class Home extends Application {
     @Override
     public void start(Stage primaryStage) {
 
+        callApiPost();
+
+        // Create the list view
         ListView<FeedItem> listView = new ListView<>(feedItems);
         listView.setCellFactory(param -> new FeedItemCell());
         listView.setSelectionModel(null); // Disable selection of list items
@@ -95,11 +110,21 @@ public class Home extends Application {
         // Create spacer regions
         Region leftSpacer = new Region();
         Region rightSpacer = new Region();
+        // Region spacer1 = new Region();
+        // Region spacer2 = new Region();
+        // Region spacer3 = new Region();
+        // Region spacer4 = new Region();
+        // HBox.setHgrow(spacer1, Priority.ALWAYS);
+        // HBox.setHgrow(spacer2, Priority.ALWAYS);
+        // HBox.setHgrow(spacer3, Priority.ALWAYS);
+        // HBox.setHgrow(spacer4, Priority.ALWAYS);
         HBox.setHgrow(leftSpacer, Priority.ALWAYS);
         HBox.setHgrow(rightSpacer, Priority.ALWAYS);
 
         // Add items to the navigation bar
         navBar.getChildren().addAll(msgIcon, leftSpacer, skills, disha, home, pitches, funding, rightSpacer, profileIcon);
+        // navBar.getChildren().addAll(msgIcon, leftSpacer, skills,spacer1, disha,spacer2, home, spacer3,pitches, spacer4,funding, rightSpacer, profileIcon);
+
 
         // Add padding to the VBox
         VBox root = new VBox(navBar, mainContent);
@@ -119,6 +144,7 @@ public class Home extends Application {
 
         // Set initial content
         setContent(scrollPane, home);
+
 
         // Add event handlers to switch content
         home.setOnMouseClicked(event -> setContent(scrollPane, home));
@@ -162,11 +188,19 @@ public class Home extends Application {
         private final String author;
         private final String content;
         private final Image image;
+        private final Image post;
+        private final String likes;
 
-        public FeedItem(String author, String content, Image image) {
+        public FeedItem(String author, String content, Image image, Image post, String likes) {
             this.author = author;
             this.content = content;
             this.image = image;
+            this.post = post;
+            this.likes = likes;
+        }
+
+        public Image getPost() {
+            return post;
         }
 
         public String getAuthor() {
@@ -179,6 +213,10 @@ public class Home extends Application {
 
         public Image getImage() {
             return image;
+        }
+
+        public String getLikes() {
+            return likes;
         }
     }
 
@@ -208,12 +246,21 @@ public class Home extends Application {
                 imageView.setFitHeight(50);
                 imageView.setFitWidth(50);
 
-                hBox.getChildren().addAll(imageView, authorLabel, contentLabel);
+                Label likeLabel = new Label(item.getLikes());
 
-                TextArea textArea = new TextArea("This is a text area");
-                textArea.setPrefHeight(50);
-                textArea.setPrefWidth(300);
-                card.getChildren().addAll(hBox, textArea);
+                hBox.getChildren().addAll(imageView, authorLabel, contentLabel,likeLabel);
+
+                // TextArea textArea = new TextArea("This is a text area");
+                // textArea.setPrefHeight(50);
+                // textArea.setPrefWidth(300);
+                
+                // Image img1 = new Image(item.getImage());
+
+                ImageView iv = new ImageView(item.getPost());
+                iv.setFitHeight(300);
+                iv.setFitWidth(400);
+                iv.setStyle("-fx-border-color: RED; -fx-border-radius: 5px; -fx-background-radius: 5px;");
+                card.getChildren().addAll(hBox, iv);
 
                 card.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, new CornerRadii(5), Insets.EMPTY)));
                 card.setStyle("-fx-border-color: gray; -fx-border-radius: 5px; -fx-background-radius: 5px;");
@@ -223,6 +270,52 @@ public class Home extends Application {
             }
         }
     }
+
+      
+
+    private void callApiPost() {
+        Label responseLabel = new Label();
+
+    new Thread(() -> {
+        try {
+            String apiUrl = "https://brickzoneprop.com/WomenEM/API/getAllPosts.php";// Replace with your API URL
+            URL url = new URL(apiUrl);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+
+            int responseCode = conn.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                String inputLine;
+                StringBuilder response = new StringBuilder();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+
+                // Parse JSON response to List<User>
+                ObjectMapper objectMapper = new ObjectMapper();
+                List<Post> post = Arrays.asList(objectMapper.readValue(response.toString(), Post[].class));
+
+                for(Post post1 : post) {
+                    System.out.println(post1.getUserName() + " " + post1.getUserType());
+                    if (post1.getContentImages() != null) {
+                        
+                        feedItems.add(new FeedItem(post1.getUserName(), post1.getUserType(), new Image(post1.getProfileImage()), new Image(post1.getContentImages()),post1.getLikes()));
+                    }
+                }
+                System.out.println(feedItems.size());
+                // Update the UI with the response
+                // Platform.runLater(() -> responseLabel.setText(users.toString()));
+            } else {
+                 Platform.runLater(() -> responseLabel.setText("GET request failed: " + responseCode));
+            }
+        } catch (Exception e) {
+            Platform.runLater(() -> responseLabel.setText("Exception: " + e.getMessage()));
+        }
+    }).start();
+}
 
     // public static void main(String[] args) {
     //     launch(args);
