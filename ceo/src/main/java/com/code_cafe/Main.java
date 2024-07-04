@@ -1,9 +1,11 @@
 package com.code_cafe;
 
+import com.code_cafe.CoursesPage.Skills;
 import com.code_cafe.HomePage.Home;
 import com.code_cafe.MentorList.UserList;
 import com.code_cafe.MessagePage.Message;
 import com.code_cafe.ProfilePage.Profile;
+
 
 import javafx.application.Application;
 
@@ -14,6 +16,7 @@ public class Main {
         // Application.launch(Profile.class, args);
         // Application.launch(Message.class, args);
         // Application.launch(UserList.class, args);
+        //  Application.launch(Skills.class, args);
 
     }
 
