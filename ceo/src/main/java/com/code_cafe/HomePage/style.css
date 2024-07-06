@@ -1,0 +1,9 @@
+.hidden-scrollbar .scroll-bar {
+    -fx-opacity: 0;
+    -fx-pref-width: 0;
+    -fx-pref-height: 0;
+}
+
+.hidden-scrollbar .scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
