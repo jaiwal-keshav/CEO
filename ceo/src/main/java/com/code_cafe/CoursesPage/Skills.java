@@ -1,7 +1,7 @@
 package com.code_cafe.CoursesPage;
 
 
-
+import javafx.animation.ScaleTransition;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -16,9 +17,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -27,28 +25,16 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
-import javafx.scene.paint.Color;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Skills extends Application {
 
-    // Color color1 = Color.web("#382478");
-    // Color color2 = Color.web("#E0187C");
-    // Color color3 = Color.web("#79277D");
-    // Color color4 = Color.web("#D4AC6E");
-    // Color color5 = Color.web("#DE68B3");
-    // Color color6 = Color.web("#25c4c8");
-    
-     Color color2 = Color.web("#E9F1FA");   //background
-     Color color1 = Color.web("#2272FF");   //button
-     
-    //  Color color1 = Color.web("#00ABE4");
-     Color color3 = Color.web("#A1D6E2");    //Hox or VBox
-
-
-
+    Color color2 = Color.web("#E9F1FA");   //background
+    Color color1 = Color.web("#2272FF");   //button
+    Color color3 = Color.web("#A1D6E2");    //HBox or VBox
 
     private Stage primaryStage;
     private List<Course> enrolledCourses = new ArrayList<>();
@@ -57,7 +43,7 @@ public class Skills extends Application {
         String title;
         String description;
         String imagePath;
-        String videoId; // Store YouTube video ID instead of URL
+        String videoId;
 
         Course(String title, String description, String imagePath, String videoId) {
             this.title = title;
@@ -90,7 +76,7 @@ public class Skills extends Application {
         enrollview.setFitHeight(50);
 
         Button enrolledCoursesButton = new Button(" Enrolled Courses");
-        enrolledCoursesButton.setFont(Font.font("Times New Roman", FontWeight.BOLD,23));
+        enrolledCoursesButton.setFont(Font.font("Times New Roman", FontWeight.BOLD, 23));
         enrolledCoursesButton.setGraphic(enrollview);
         enrolledCoursesButton.setStyle(
                 "-fx-background-color: " + toRgbString(color1) + ";" +
@@ -100,20 +86,21 @@ public class Skills extends Application {
                         "-fx-padding: 10 20 10 20;");
 
         enrolledCoursesButton.setOnAction(e -> primaryStage.setScene(createEnrolledCoursesScene()));
+        addHoverEffect(enrolledCoursesButton);
 
         Label certificateProg = new Label("Certification Program");
         certificateProg.setFont(Font.font("Times New Roman", FontWeight.BOLD, 30));
         certificateProg.setStyle("-fx-text-fill: Black");
 
-        HBox certificationProgramBox = new HBox(10);
+        HBox certificationProgramBox = new HBox(20);
         certificationProgramBox.setPrefSize(400, 400);
         certificationProgramBox.setPadding(new Insets(10));
         certificationProgramBox.setStyle(
-            "-fx-background-color: " + toRgbString(color3) + ";" +
-            "-fx-text-fill: white;" +
-            "-fx-background-radius: 20;" +
-            "-fx-border-radius: 20;" +
-            "-fx-padding: 10 20 10 20;");
+                "-fx-background-color: " + toRgbString(color3) + ";" +
+                        "-fx-text-fill: white;" +
+                        "-fx-background-radius: 20;" +
+                        "-fx-border-radius: 20;" +
+                        "-fx-padding: 10 20 10 20;");
         ScrollPane certificationScrollPane = new ScrollPane(certificationProgramBox);
         certificationScrollPane.setFitToHeight(true);
         certificationScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
@@ -140,11 +127,11 @@ public class Skills extends Application {
         onlineCoursesBox.setPadding(new Insets(10));
         onlineCoursesBox.setPrefSize(400, 400);
         onlineCoursesBox.setStyle(
-            "-fx-background-color: " + toRgbString(color3) + ";" +
-            "-fx-text-fill: black;" +
-            "-fx-background-radius: 20;" +
-            "-fx-border-radius: 20;" +
-            "-fx-padding: 10 20 10 20;");
+                "-fx-background-color: " + toRgbString(color3) + ";" +
+                        "-fx-text-fill: black;" +
+                        "-fx-background-radius: 20;" +
+                        "-fx-border-radius: 20;" +
+                        "-fx-padding: 10 20 10 20;");
         ScrollPane onlineCoursesScrollPane = new ScrollPane(onlineCoursesBox);
         onlineCoursesScrollPane.setFitToHeight(true);
         onlineCoursesScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
@@ -164,11 +151,12 @@ public class Skills extends Application {
         takeAssessmentButton.setFont(Font.font("Times New Roman", FontWeight.BOLD, 20));
         takeAssessmentButton.setGraphic(testview);
         takeAssessmentButton.setStyle(
-            "-fx-background-color: " + toRgbString(color1) + ";" +
-            "-fx-text-fill: white;" +
-            "-fx-background-radius: 20;" +
-            "-fx-border-radius: 20;" +
-            "-fx-padding: 10 20 10 20;");
+                "-fx-background-color: " + toRgbString(color1) + ";" +
+                        "-fx-text-fill: white;" +
+                        "-fx-background-radius: 20;" +
+                        "-fx-border-radius: 20;" +
+                        "-fx-padding: 10 20 10 20;");
+        addHoverEffect(takeAssessmentButton);
 
         VBox certificateBox = new VBox(10, certificateProg, certificationScrollPane);
         VBox courseBox = new VBox(10, onlineCourse, onlineCoursesScrollPane);
@@ -176,11 +164,11 @@ public class Skills extends Application {
         VBox root = new VBox(30, sp, enrolledCoursesButton, certificateBox, courseBox, takeAssessmentButton);
         root.setPadding(new Insets(20, 50, 50, 50));
         root.setStyle(
-            "-fx-background-color: " + toRgbString(color2) + ";" +
-            "-fx-text-fill: white;" +
-            "-fx-background-radius: 20;" +
-            "-fx-border-radius: 20;" +
-            "-fx-padding: 10 20 10 20;");
+                "-fx-background-color: linear-gradient(to bottom, #E9F1FA, #CFE2F3);" +
+                        "-fx-text-fill: white;" +
+                        "-fx-background-radius: 20;" +
+                        "-fx-border-radius: 20;" +
+                        "-fx-padding: 10 20 10 20;");
 
         ScrollPane mainScrollPane = new ScrollPane(root);
         mainScrollPane.setFitToWidth(true);
@@ -198,15 +186,19 @@ public class Skills extends Application {
 
     private VBox createCourseCard(String title, String imagePath, String description, String videoID) {
         VBox card = new VBox(5);
-        card.setPrefWidth(800);
+        card.setPrefWidth(300);
         card.setPadding(new Insets(10));
-        card.setStyle("-fx-border-color: black; -fx-border-width: 1; -fx-background-color: white;");
+        card.setStyle("-fx-border-color: #ddd; -fx-border-width: 1; -fx-background-color: white; " +
+                "-fx-background-radius: 10; -fx-border-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 5);");
         card.setAlignment(Pos.TOP_CENTER);
+
+        addHoverEffect(card);
 
         Image image = new Image(imagePath);
         ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(300);
-        imageView.setFitHeight(250);
+        imageView.setFitWidth(280);
+        imageView.setFitHeight(200);
+        imageView.setStyle("-fx-background-radius: 10;");
 
         Text titleText = new Text(title);
         titleText.setFont(Font.font("Arial", FontWeight.BOLD, 18));
@@ -221,10 +213,17 @@ public class Skills extends Application {
         VBox.setVgrow(spacer1, Priority.ALWAYS);
 
         Button enrollButton = new Button("Enroll Now");
+        enrollButton.setStyle(
+                "-fx-background-color: " + toRgbString(color1) + ";" +
+                        "-fx-text-fill: white;" +
+                        "-fx-background-radius: 20;" +
+                        "-fx-border-radius: 20;" +
+                        "-fx-padding: 10 20 10 20;");
         enrollButton.setOnAction(e -> {
             enrolledCourses.add(new Course(title, description, imagePath, videoID));
             primaryStage.setScene(createMainScene());
         });
+        addHoverEffect(enrollButton);
 
         HBox buttonbox = new HBox(enrollButton);
         buttonbox.setAlignment(Pos.BOTTOM_CENTER);
@@ -234,6 +233,30 @@ public class Skills extends Application {
                 e -> primaryStage.setScene(createCourseDetailScene(title, imagePath, description, videoID)));
 
         return card;
+    }
+
+    private void addHoverEffect(javafx.scene.Node node) {
+        node.setOnMouseEntered(e -> {
+            ScaleTransition st = new ScaleTransition(Duration.millis(200), node);
+            st.setToX(1.05);
+            st.setToY(1.05);
+            st.play();
+
+            if (node instanceof Button) {
+                ((Button) node).setStyle("-fx-background-color: #1E90FF;");
+            }
+        });
+
+        // node.setOnMouseExited(e -> {
+        //     ScaleTransition st = new ScaleTransition(Duration.millis(200), node);
+        //     st.setToX(1);
+        //     st.setToY(1);
+        //     st.play();
+
+        //     if (node instanceof Button) {
+        //         ((Button) node).setStyle("-fx-background-color: " + toRgbString(color1) + ";");
+        //     }
+        // });
     }
 
     private Scene createCourseDetailScene(String courseTitle, String imagePath, String description, String videoUrl) {
@@ -261,10 +284,12 @@ public class Skills extends Application {
             enrolledCourses.add(new Course(courseTitle, description, imagePath, videoUrl));
             primaryStage.setScene(createMainScene());
         });
+        addHoverEffect(enrollButton);
 
         Button backButton = new Button("Back");
         backButton.setFont(Font.font("Arial", FontWeight.BOLD, 20));
         backButton.setOnAction(e -> primaryStage.setScene(createMainScene()));
+        addHoverEffect(backButton);
 
         HBox buttonBox = new HBox(10, enrollButton, backButton);
         buttonBox.setAlignment(Pos.CENTER);
@@ -284,6 +309,7 @@ public class Skills extends Application {
             courseButton.setFont(Font.font("Arial", FontWeight.BOLD, 20));
             courseButton.setStyle("-fx-background-color: lightblue;");
             courseButton.setOnAction(e -> primaryStage.setScene(createCourseVideoScene(course)));
+            addHoverEffect(courseButton);
 
             dialogVbox.getChildren().add(courseButton);
         }
@@ -291,6 +317,7 @@ public class Skills extends Application {
         Button backButton = new Button("Back");
         backButton.setFont(Font.font("Arial", FontWeight.BOLD, 20));
         backButton.setOnAction(e -> primaryStage.setScene(createMainScene()));
+        addHoverEffect(backButton);
 
         dialogVbox.getChildren().add(backButton);
 
@@ -317,6 +344,7 @@ public class Skills extends Application {
         Button backButton = new Button("Back");
         backButton.setFont(Font.font("Arial", FontWeight.BOLD, 20));
         backButton.setOnAction(e -> primaryStage.setScene(createEnrolledCoursesScene()));
+        addHoverEffect(backButton);
 
         HBox buttonBox = new HBox(10, backButton);
         buttonBox.setAlignment(Pos.CENTER);
@@ -326,10 +354,7 @@ public class Skills extends Application {
         return new Scene(videoBox, 1900, 1000);
     }
 
-    
-
     public static void main(String[] args) {
         launch(args);
     }
 }
-
