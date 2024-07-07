@@ -44,14 +44,19 @@ package com.code_cafe.ReelsPage;
          // Load video files
          List<String> videoPaths = Arrays.asList(
                 getClass().getResource("/assets/videos/video.mp4").toExternalForm(),
-                // getClass().getResource("/assets/videos/g.mp4").toExternalForm(),
-                // getClass().getResource("/assets/videos/c.mp4").toExternalForm(),
-                // getClass().getResource("/assets/videos/mm.mp4").toExternalForm(),
-                //  getClass().getResource("/assets/videos/video.mp4").toExternalForm(),
-                //  getClass().getResource("/assets/videos/n.mp4").toExternalForm(),
-                //  getClass().getResource("/assets/videos/m.mp4").toExternalForm(),
-                //  getClass().getResource("/assets/videos/loader.mp4").toExternalForm(),
-                 getClass().getResource("/assets/videos/a.mp4").toExternalForm()
+                 getClass().getResource("/assets/videos/a.mp4").toExternalForm(),
+                 getClass().getResource("/assets/videos/B.mp4").toExternalForm(),
+                 getClass().getResource("/assets/videos/C.mp4").toExternalForm(),
+                 getClass().getResource("/assets/videos/D.mp4").toExternalForm(),
+                 getClass().getResource("/assets/videos/E.mp4").toExternalForm(),
+                 getClass().getResource("/assets/videos/G.mp4").toExternalForm(),
+                 getClass().getResource("/assets/videos/H.mp4").toExternalForm(),
+                 getClass().getResource("/assets/videos/I.mp4").toExternalForm(),
+                 getClass().getResource("/assets/videos/J.mp4").toExternalForm(),
+                 getClass().getResource("/assets/videos/L.mp4").toExternalForm(),
+                 getClass().getResource("/assets/videos/M.mp4").toExternalForm(),
+                 getClass().getResource("/assets/videos/N.mp4").toExternalForm()
+               
          );
  
          // Create MediaPlayers for each video
@@ -88,8 +93,8 @@ package com.code_cafe.ReelsPage;
  
          // Create a MediaView to display video
          MediaView mediaView = new MediaView(mediaPlayer);
-         mediaView.setFitWidth(360);
-         mediaView.setFitHeight(650); // Adjusted height
+         mediaView.setFitWidth(400);
+         mediaView.setFitHeight(800); // Adjusted height
  
          // Create interactive buttons
          Button likeButton = createIconButton("like.png", "50K");
