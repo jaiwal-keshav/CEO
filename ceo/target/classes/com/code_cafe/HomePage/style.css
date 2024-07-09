@@ -7,3 +7,36 @@
 .hidden-scrollbar .scroll-pane .viewport {
     -fx-background-color: transparent;
 }
+
+.nav-icon {
+    -fx-cursor: hand;
+   
+}
+
+.nav-icon:hover {
+    -fx-transform: scale(1.2);
+    -fx-effect: dropshadow(three-pass-box, rgba(135,206,235,0.8), 20, 0.5, 0, 0);
+}
+
+.list-cell {
+    -fx-background-color: rgb(255, 255, 255);
+    -fx-border-color: gray;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 10px;
+    
+}
+
+
+
+.transparent-list-view {
+    -fx-background-color: transparent;
+    -fx-control-inner-background: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+}
+
+.transparent-list-view .list-cell {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+}

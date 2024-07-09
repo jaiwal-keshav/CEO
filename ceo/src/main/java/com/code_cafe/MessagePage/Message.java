@@ -7,30 +7,18 @@ import javafx.collections.transformation.FilteredList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import com.code_cafe.Database.User;
+import com.code_cafe.HomePage.Home;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -41,28 +29,14 @@ import java.util.List;
 
 public class Message extends Application {
 
-    // private ObservableList<FeedItem> feedItems = FXCollections.observableArrayList(
-    //         // new FeedItem("Janhavi", "Description 1", new Image("/assets/images/User1.jpeg")),
-    //         // new FeedItem("Keshav", "Description 2", new Image("/assets/images/User2.jpeg")),
-    //         // new FeedItem("Swapnali", "Description 3", new Image("/assets/images/User3.jpeg")),
-    //         // new FeedItem("Bharati", "Description 4", new Image("/assets/images/User4.jpeg")),
-    //         // new FeedItem("Kartik", "Description 5", new Image("/assets/images/User5.jpeg")),
-    //         // new FeedItem("Raj", "Description 6", new Image("/assets/images/User6.jpeg")),
-    //         // new FeedItem("Manasvi", "Description 7", new Image("/assets/images/User7.jpeg")),
-    //         // new FeedItem("Riya", "Description 8", new Image("/assets/images/User8.jpeg")),
-    //         // new FeedItem("Tanvi", "Description 9", new Image("/assets/images/User9.jpeg")),
-    //         // new FeedItem("Jyoti", "Description 10", new Image("/assets/images/User10.jpeg"))
-    //         // Add more feed items as needed
-
-    // );
-
-    public ObservableList<FeedItem> feedItems = FXCollections.observableArrayList();
-
-    private TextArea chatMessages; // Declare chatMessages as a class-level variable
+    private ObservableList<FeedItem> feedItems = FXCollections.observableArrayList();
+    private TextArea chatMessages;
     private Label chatLabel;
+    private Stage primaryStage;
 
     @Override
     public void start(Stage primaryStage) {
+        this.primaryStage = primaryStage;
         primaryStage.setTitle("ChatBox");
 
         BorderPane root = new BorderPane();
@@ -77,97 +51,12 @@ public class Message extends Application {
         root.setLeft(userListContainer);
 
         // Right side - Chat interface
-        VBox chatInterface = new VBox();
-        chatInterface.setPadding(new Insets(10));
-        chatInterface.setSpacing(10);
-        chatInterface.setStyle("-fx-background-color: white;");
-        chatInterface.setAlignment(Pos.TOP_CENTER);
-
-        // Chat messages area (TextArea)
-        chatMessages = new TextArea();
-        chatMessages.setEditable(false); // Read-only
-        chatMessages.setWrapText(true);
-        chatMessages.setPrefHeight(400); // Adjust height as needed
-       // chatMessages.setTextAlignment(TextAlignment.LEFT);
-        chatInterface.getChildren().add(chatMessages);
-
-        // Message input area (TextField) and Send button
-        TextField messageInput = new TextField();
-        messageInput.setPromptText("Type a message...");
-        messageInput.setPrefWidth(300); // Adjust width as needed
-
-        Button sendButton = new Button("Send");
-        sendButton.setOnAction(event -> {
-            String message = messageInput.getText().trim();
-            if (!message.isEmpty()) {
-                sendMessage(message);
-                messageInput.clear();
-            }
-        });
-
-        HBox messageBox = new HBox(messageInput, sendButton);
-        messageBox.setPadding(new Insets(10));
-        messageBox.setSpacing(10);
-        chatInterface.getChildren().add(messageBox);
-
-        // Add message sending functionality (e.g., press Enter to send)
-        messageInput.setOnAction(event -> {
-            String message = messageInput.getText().trim();
-            if (!message.isEmpty()) {
-                sendMessage(message);
-                messageInput.clear();
-            }
-        });
-
-       
-
-
-        // Display initial chat label
-        chatLabel = new Label("Select a user to start chatting.");
-        chatLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14pt;");
-        chatLabel.setPadding(new Insets(10));
-        chatInterface.getChildren().add(chatLabel);
-        VBox.setVgrow(chatLabel, Priority.ALWAYS); // Allow label to expand
+        VBox chatInterface = setupChatInterface();
         root.setCenter(chatInterface);
 
-        // Top search bar
-        TextField searchBar = new TextField();
-        searchBar.setPromptText("Search User");
-        searchBar.setPadding(new Insets(10));
-
-        HBox topBar = new HBox(searchBar);
-        topBar.setStyle("-fx-background-color: lightblue;");
-        topBar.setPrefWidth(800);
-        topBar.setPadding(new Insets(20, 20, 20, 20));
+        // Top search bar and home button
+        HBox topBar = setupTopBar(userList);
         root.setTop(topBar);
-
-        // Filtered list for displaying search results
-        FilteredList<FeedItem> filteredFeedItems = new FilteredList<>(feedItems, p -> true);
-
-        // Search bar listener to filter users
-        searchBar.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredFeedItems.setPredicate(feedItem -> {
-                // If filter text is empty, display all users
-                if (newValue == null || newValue.isEmpty()) {
-                    return true;
-                }
-
-                // Compare usernames with filter text
-                String lowerCaseFilter = newValue.toLowerCase();
-                return feedItem.getAuthor().toLowerCase().contains(lowerCaseFilter);
-            });
-        });
-
-        // Handle user selection in the list
-        userList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                clearChat();
-                chatLabel.setText(newValue.getAuthor()); // Set chat label to selected user's name
-                // Clear previous chat messages or update chat interface here
-            } else {
-                chatLabel.setText("Select a user to start chatting.");
-            }
-        });
 
         Scene scene = new Scene(root, 800, 600);
         primaryStage.setScene(scene);
@@ -186,7 +75,7 @@ public class Message extends Application {
                     setText(null);
                     setGraphic(null);
                 } else {
-                    HBox hBox = new HBox(10); // 10 is the spacing between elements
+                    HBox hBox = new HBox(10);
                     hBox.setPadding(new Insets(10));
 
                     Label authorLabel = new Label(item.getAuthor());
@@ -202,52 +91,107 @@ public class Message extends Application {
             }
         });
 
+        userList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                clearChat();
+                chatLabel.setText(newValue.getAuthor());
+            } else {
+                chatLabel.setText("Select a user to start chatting.");
+            }
+        });
+
         return userList;
     }
 
+    private VBox setupChatInterface() {
+        VBox chatInterface = new VBox();
+        chatInterface.setPadding(new Insets(10));
+        chatInterface.setSpacing(10);
+        chatInterface.setStyle("-fx-background-color: white;");
+        chatInterface.setAlignment(Pos.TOP_CENTER);
+
+        chatMessages = new TextArea();
+        chatMessages.setEditable(false);
+        chatMessages.setWrapText(true);
+        chatMessages.setPrefHeight(400);
+        chatInterface.getChildren().add(chatMessages);
+
+        TextField messageInput = new TextField();
+        messageInput.setPromptText("Type a message...");
+        messageInput.setPrefWidth(300);
+
+        Button sendButton = new Button("Send");
+        sendButton.setOnAction(event -> sendMessage(messageInput.getText().trim()));
+
+        HBox messageBox = new HBox(messageInput, sendButton);
+        messageBox.setPadding(new Insets(10));
+        messageBox.setSpacing(10);
+        chatInterface.getChildren().add(messageBox);
+
+        messageInput.setOnAction(event -> sendMessage(messageInput.getText().trim()));
+
+        chatLabel = new Label("Select a user to start chatting.");
+        chatLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14pt;");
+        chatLabel.setPadding(new Insets(10));
+        chatInterface.getChildren().add(chatLabel);
+        VBox.setVgrow(chatLabel, Priority.ALWAYS);
+
+        return chatInterface;
+    }
+
+    private HBox setupTopBar(ListView<FeedItem> userList) {
+        TextField searchBar = new TextField();
+        searchBar.setPromptText("Search User");
+        searchBar.setPadding(new Insets(10));
+
+        Button homeButton = new Button("Home");
+        homeButton.setOnAction(event -> returnToHome());
+
+        HBox topBar = new HBox(searchBar, homeButton);
+        topBar.setStyle("-fx-background-color: lightblue;");
+        topBar.setPrefWidth(800);
+        topBar.setPadding(new Insets(20));
+        topBar.setSpacing(10);
+
+        FilteredList<FeedItem> filteredFeedItems = new FilteredList<>(feedItems, p -> true);
+        searchBar.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredFeedItems.setPredicate(feedItem -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                String lowerCaseFilter = newValue.toLowerCase();
+                return feedItem.getAuthor().toLowerCase().contains(lowerCaseFilter);
+            });
+        });
+        userList.setItems(filteredFeedItems);
+
+        return topBar;
+    }
+
     private void sendMessage(String message) {
-        // Display message in chatMessages TextArea
-        chatMessages.appendText("You: " + message + "\n");
+        if (!message.isEmpty()) {
+            chatMessages.appendText("You: " + message + "\n");
+        }
     }
 
     private void clearChat() {
-        // Clear chatMessages TextArea
         chatMessages.clear();
     }
 
-    public static void main(String[] args) {
-        launch();
-    }
-
-    public static class FeedItem {
-        private String author;
-        private String content;
-        private Image image;
-
-        public FeedItem(String author, String content, Image image) {
-            this.author = author;
-            this.content = content;
-            this.image = image;
-        }
-
-        public String getAuthor() {
-            return author;
-        }
-
-        public String getContent() {
-            return content;
-        }
-
-        public Image getImage() {
-            return image;
+    private void returnToHome() {
+        Home homePage = new Home();
+        try {
+            homePage.start(new Stage());
+            primaryStage.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
-
 
     private void callApi() {
         new Thread(() -> {
             try {
-                String apiUrl = "https://brickzoneprop.com/WomenEM/APIS/getUsers1.php"; // Replace with your API URL
+                String apiUrl = "https://brickzoneprop.com/WomenEM/APIS/getUsers1.php";
                 URL url = new URL(apiUrl);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("GET");
@@ -263,23 +207,36 @@ public class Message extends Application {
                     }
                     in.close();
 
-                    // Parse JSON response to List<User>
                     ObjectMapper objectMapper = new ObjectMapper();
                     List<User> users = Arrays.asList(objectMapper.readValue(response.toString(), User[].class));
 
-                    for(User user : users) {
-                        System.out.println(user.getAge() + " " + user.getUserName());
+                    for (User user : users) {
                         feedItems.add(new FeedItem(user.getUserName(), "Description 1", new Image("/assets/images/User1.jpeg")));
                     }
-                    // Update the UI with the response
-                    //Platform.runLater(() -> responseLabel.setText(users.toString()));
-                } else {
-                   // Platform.runLater(() -> responseLabel.setText("GET request failed: " + responseCode));
                 }
             } catch (Exception e) {
-                //Platform.runLater(() -> responseLabel.setText("Exception: " + e.getMessage()));
+                e.printStackTrace();
             }
         }).start();
     }
-}
 
+    public static class FeedItem {
+        private String author;
+        private String content;
+        private Image image;
+
+        public FeedItem(String author, String content, Image image) {
+            this.author = author;
+            this.content = content;
+            this.image = image;
+        }
+
+        public String getAuthor() { return author; }
+        public String getContent() { return content; }
+        public Image getImage() { return image; }
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
