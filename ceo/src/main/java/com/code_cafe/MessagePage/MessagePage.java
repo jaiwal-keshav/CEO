@@ -55,6 +55,7 @@ public class MessagePage extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        this.primaryStage = primaryStage;
         primaryStage.setTitle("ChatBox");
 
         HBox root = new HBox();
@@ -226,10 +227,16 @@ public class MessagePage extends Application {
     private void returnToHome() {
         Home homePage = new Home();
         try {
-            homePage.start(new Stage());
             primaryStage.close();
+            homePage.start(new Stage());
+        
+            System.out.println("msg stage closed");
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        finally{
+            System.out.println("Stage closed");
+            
         }
     }
 
