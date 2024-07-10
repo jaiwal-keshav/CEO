@@ -47,6 +47,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.code_cafe.HomePage.Home;
+
 public class Profile extends Application {
     // private List<EducationEntry> educationList = new ArrayList<>();
     private ObservableList<EducationEntry> observableEducationList;
@@ -86,7 +88,7 @@ public class Profile extends Application {
 
     observableEducationList = FXCollections.observableArrayList();
 
-    Image background = new Image("assets/background1.png");
+    Image background = new Image("/assets/background1.png");
      backgroundView = new ImageView(background);
     backgroundView.setPreserveRatio(true);
 
@@ -188,7 +190,7 @@ public class Profile extends Application {
     aboutMeField.setLayoutX(500);
     aboutMeField.setLayoutY(520);
 
-    Image ig3 = new Image("assets/edit2.png");
+    Image ig3 = new Image("/assets/edit2.png");
     ImageView iv3 = new ImageView(ig3);
     iv3.setFitWidth(50);
     iv3.setFitHeight(50);
@@ -207,7 +209,7 @@ public class Profile extends Application {
 
     editbtn.setOnAction(e -> openEditDialog(username, headline, aboutMeField));
 
-    Image people = new Image("assets/connected1.png");
+    Image people = new Image("/assets/connected1.png");
     ImageView pview = new ImageView(people);
     pview.setFitWidth(50);
     pview.setFitHeight(50);
@@ -235,7 +237,7 @@ public class Profile extends Application {
     connectbox.setLayoutY(780);
     connectbox.setPrefSize(1000, 50);
 
-    Image post = new Image("assets/post.png");
+    Image post = new Image("/assets/post.png");
     ImageView postview = new ImageView(post);
     postview.setFitWidth(50);
     postview.setFitHeight(50);
@@ -307,9 +309,19 @@ public class Profile extends Application {
     mainContent.setLayoutY(700);
     mainContent.setPrefSize(500, 200);
     //mainContent.setStyle("-fx-background-color: " + toRgbString(color2) + ";");
-    
+
+
+
+
+
+    Button homeButton = new Button("Return to Home");
+    homeButton.setOnAction(e -> returnToHome());
+
+
+
+
     Group gr = new Group(root, sp,cameraView, vb, usernameField, headlineField, aboutMeLabel, aboutMeField, iv3, editbtn,
-            connectbox, postbox, mainContent);
+            connectbox, postbox,homeButton, mainContent);
     ScrollPane scrollPane = new ScrollPane(gr);
     scrollPane.setFitToWidth(true);
     scrollPane.setStyle("-fx-background-color:#7b9acc");
@@ -327,6 +339,17 @@ public class Profile extends Application {
     primaryStage.show();
 }
 
+
+
+ private void returnToHome() {
+         Home homePage = new Home();
+         try {
+             homePage.start(new Stage());
+             primaryStage.close();
+         } catch (Exception e) {
+             e.printStackTrace();
+         }
+     }
 // Open dialog for photo change
 private void openPhotoChangeDialog() {
     Stage dialog = new Stage();
@@ -458,7 +481,7 @@ private void choosePhoto(String type) {
         entryBox.setStyle("-fx-border-color: lightgray; -fx-border-width: 1px; -fx-border-radius: 5px;");
 
         // Dummy education logo (adjust the path as per your actual assets)
-        Image educationLogo = new Image("assets/education.png");
+        Image educationLogo = new Image("/assets/education.png");
         ImageView logoImageView = new ImageView(educationLogo);
         logoImageView.setFitWidth(50);
         logoImageView.setFitHeight(50);
@@ -543,4 +566,7 @@ private void choosePhoto(String type) {
     //         e.printStackTrace();
     //     }
     // }
+    public static void main(String[] args) {
+        launch(args);
+    }
 }

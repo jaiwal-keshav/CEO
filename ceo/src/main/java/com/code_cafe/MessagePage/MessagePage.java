@@ -227,8 +227,9 @@ public class MessagePage extends Application {
     private void returnToHome() {
         Home homePage = new Home();
         try {
-            primaryStage.close();
+           
             homePage.start(new Stage());
+            primaryStage.close();
         
             System.out.println("msg stage closed");
         } catch (Exception e) {

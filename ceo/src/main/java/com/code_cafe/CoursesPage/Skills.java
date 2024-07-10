@@ -1,6 +1,13 @@
 package com.code_cafe.CoursesPage;
 
 
+
+
+
+
+
+
+
 import javafx.animation.ScaleTransition;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -12,6 +19,11 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -30,13 +42,21 @@ import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.code_cafe.MessagePage.MessagePage;
+import com.code_cafe.ProfilePage.Profile;
+import com.code_cafe.ReelsPage.ReelsPage;
+
 public class Skills extends Application {
 
     Color color2 = Color.web("#E9F1FA");   //background
     Color color1 = Color.web("#2272FF");   //button
     Color color3 = Color.web("#A1D6E2");    //HBox or VBox
+    Color color4 = Color.web("#7b9acc");    //HBox or VBox
+    Color color5 = Color.web("#FCF6F5");    //HBox or VBox
+
 
     private Stage primaryStage;
+    private HBox navBar = new HBox(35);
     private List<Course> enrolledCourses = new ArrayList<>();
 
     public static class Course {
@@ -57,20 +77,71 @@ public class Skills extends Application {
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
         primaryStage.setTitle("Course Layout");
+         
+       
 
         primaryStage.setScene(createMainScene());
         primaryStage.show();
     }
 
-    private Scene createMainScene() {
-        Image course = new Image("assets/tutorial.png");
+    private ImageView createImageView(String imagePath, int height, int width) {
+        ImageView imageView = new ImageView(new Image(imagePath));
+        imageView.setFitHeight(height);
+        imageView.setFitWidth(width);
+        return imageView;
+    }
+
+    
+
+     private Scene createMainScene() {
+        
+        
+        // Add drop shadow to ListView container
+        navBar.setPadding(new Insets(10));
+        navBar.setStyle("-fx-background-color: beige;");
+        navBar.setPrefWidth(1900);
+
+        DropShadow dropShadow = new DropShadow();
+        dropShadow.setOffsetX(5);
+        dropShadow.setOffsetY(5);
+        dropShadow.setColor(Color.GRAY);
+        navBar.setEffect(dropShadow);
+
+        ImageView msgIcon = createImageView("assets/message.png", 40, 40);
+        ImageView disha = createImageView("assets/chatbot.png", 40, 40);
+        ImageView skills = createImageView("assets/skill.png", 40, 40);
+        ImageView funding = createImageView("assets/fund.png", 40, 40);
+        ImageView home = createImageView("assets/home.png", 40, 40);
+        ImageView pitches = createImageView("assets/trending.png", 40, 40);
+        ImageView profileIcon = createImageView("assets/profile.gif", 40, 40);
+
+        Region leftSpacer = new Region();
+        Region rightSpacer = new Region();
+        HBox.setHgrow(leftSpacer, Priority.ALWAYS);
+        HBox.setHgrow(rightSpacer, Priority.ALWAYS);
+
+        navBar.getChildren().addAll(msgIcon, leftSpacer, skills, disha, home, pitches, funding, rightSpacer, profileIcon);
+
+        // Event handlers for navigation icons
+        home.setOnMouseClicked(event -> openHomePage());
+        msgIcon.setOnMouseClicked(event -> openMessagePage());
+        skills.setOnMouseClicked(event -> primaryStage.setScene(createMainScene()));
+        disha.setOnMouseClicked(event -> primaryStage.setScene(createMainScene()));
+        pitches.setOnMouseClicked(event -> openReelsPage());
+        funding.setOnMouseClicked(event -> primaryStage.setScene(createMainScene()));
+        profileIcon.setOnMouseClicked(event -> openProfilePage());
+
+        Image course = new Image("assets/images/tutorial.png");
         ImageView courseView = new ImageView(course);
         courseView.setFitHeight(350);
 
         StackPane sp = new StackPane();
         sp.getChildren().add(courseView);
 
-        Image enroll = new Image("assets/enroll.png");
+
+
+
+        Image enroll = new Image("assets/images/enroll.png");
         ImageView enrollview = new ImageView(enroll);
         enrollview.setFitWidth(50);
         enrollview.setFitHeight(50);
@@ -79,11 +150,12 @@ public class Skills extends Application {
         enrolledCoursesButton.setFont(Font.font("Times New Roman", FontWeight.BOLD, 23));
         enrolledCoursesButton.setGraphic(enrollview);
         enrolledCoursesButton.setStyle(
-                "-fx-background-color: " + toRgbString(color1) + ";" +
+                "-fx-background-color: " + toRgbString(color5) + ";" +
                         "-fx-text-fill: black;" +
                         "-fx-background-radius: 20;" +
                         "-fx-border-radius: 20;" +
                         "-fx-padding: 10 20 10 20;");
+        enrolledCoursesButton.setPadding(new Insets(10));
 
         enrolledCoursesButton.setOnAction(e -> primaryStage.setScene(createEnrolledCoursesScene()));
         addHoverEffect(enrolledCoursesButton);
@@ -96,34 +168,39 @@ public class Skills extends Application {
         certificationProgramBox.setPrefSize(400, 400);
         certificationProgramBox.setPadding(new Insets(10));
         certificationProgramBox.setStyle(
-                "-fx-background-color: " + toRgbString(color3) + ";" +
+                //"-fx-background-color: " + toRgbString(color3) + ";" +
+                "-fx-background-color: rgba(255, 255, 255, 0.5);" +
                         "-fx-text-fill: white;" +
                         "-fx-background-radius: 20;" +
                         "-fx-border-radius: 20;" +
                         "-fx-padding: 10 20 10 20;");
+        
+        
         ScrollPane certificationScrollPane = new ScrollPane(certificationProgramBox);
         certificationScrollPane.setFitToHeight(true);
         certificationScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        certificationScrollPane.setOpacity(0.9);
 
         certificationProgramBox.getChildren().addAll(
-                createCourseCard("Data Science for Beginners", "assets/Marketing.png",
+                createCourseCard("Data Science for Beginners", "assets/images/Marketing.png",
                         "This is a beginner-level course for data science.", "qQZE17pLegE"),
-                createCourseCard("Java Programming Masterclass", "assets/Marketing.png",
+                createCourseCard("Java Programming Masterclass", "assets/images/Marketing.png",
                         "Master Java programming in this comprehensive course.", "qQZE17pLegE"),
-                createCourseCard("Course 3", "assets/Marketing.png", "Course 3 detailed description.",
+                createCourseCard("Course 3", "assets/images/Marketing.png", "Course 3 detailed description.",
                         "https://www.example.com/video3.mp4"),
-                createCourseCard("Course 4", "assets/Marketing.png", "Course 4 detailed description.",
+                createCourseCard("Course 4", "assets/images/Marketing.png", "Course 4 detailed description.",
                         "https://www.example.com/video4.mp4"),
-                createCourseCard("Course 5", "assets/Marketing.png", "Course 5 detailed description.",
+                createCourseCard("Course 5", "assets/images/Marketing.png", "Course 5 detailed description.",
                         "https://www.example.com/video5.mp4"),
-                createCourseCard("Course 6", "assets/Marketing.png", "Course 6 detailed description.",
+                createCourseCard("Course 6", "assets/images/Marketing.png", "Course 6 detailed description.",
                         "https://www.example.com/video6.mp4"));
+                        
 
         Label onlineCourse = new Label("Online Courses");
         onlineCourse.setFont(Font.font("Times New Roman", FontWeight.BOLD, 30));
         onlineCourse.setStyle("-fx-text-fill: Black");
 
-        HBox onlineCoursesBox = new HBox(10);
+        HBox onlineCoursesBox = new HBox(20);
         onlineCoursesBox.setPadding(new Insets(10));
         onlineCoursesBox.setPrefSize(400, 400);
         onlineCoursesBox.setStyle(
@@ -137,12 +214,12 @@ public class Skills extends Application {
         onlineCoursesScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 
         onlineCoursesBox.getChildren().addAll(
-                createCourseCard("Cybersecurity Basics", "assets/Marketing.png",
+                createCourseCard("Cybersecurity Basics", "assets/images/Marketing.png",
                         "Learn the basics of cybersecurity in this course.", "qQZE17pLegE"),
-                createCourseCard("Photography for Beginners", "assets/Marketing.png",
+                createCourseCard("Photography for Beginners", "assets/images/Marketing.png",
                         "This course covers the fundamentals of photography.", "https://www.example.com/video8.mp4"));
 
-        Image test = new Image("assets/question.gif");
+        Image test = new Image("assets/images/question.gif");
         ImageView testview = new ImageView(test);
         testview.setFitWidth(60);
         testview.setFitHeight(60);
@@ -151,7 +228,7 @@ public class Skills extends Application {
         takeAssessmentButton.setFont(Font.font("Times New Roman", FontWeight.BOLD, 20));
         takeAssessmentButton.setGraphic(testview);
         takeAssessmentButton.setStyle(
-                "-fx-background-color: " + toRgbString(color1) + ";" +
+                "-fx-background-color: " + toRgbString(color5) + ";" +
                         "-fx-text-fill: white;" +
                         "-fx-background-radius: 20;" +
                         "-fx-border-radius: 20;" +
@@ -159,22 +236,68 @@ public class Skills extends Application {
         addHoverEffect(takeAssessmentButton);
 
         VBox certificateBox = new VBox(10, certificateProg, certificationScrollPane);
+        certificateBox.setPadding(new Insets(10));
         VBox courseBox = new VBox(10, onlineCourse, onlineCoursesScrollPane);
+        courseBox.setPadding(new Insets(10));
 
-        VBox root = new VBox(30, sp, enrolledCoursesButton, certificateBox, courseBox, takeAssessmentButton);
-        root.setPadding(new Insets(20, 50, 50, 50));
-        root.setStyle(
-                "-fx-background-color: linear-gradient(to bottom, #E9F1FA, #CFE2F3);" +
-                        "-fx-text-fill: white;" +
-                        "-fx-background-radius: 20;" +
-                        "-fx-border-radius: 20;" +
-                        "-fx-padding: 10 20 10 20;");
 
-        ScrollPane mainScrollPane = new ScrollPane(root);
+        VBox root = new VBox(30);
+        //root.setPadding(new Insets(20));
+        root.getChildren().addAll(navBar, sp, enrolledCoursesButton, certificateBox, courseBox, takeAssessmentButton);
+        //root.setAlignment(Pos.CENTER);
+        
+    
+
+
+        StackPane mainPane = new StackPane();
+        mainPane.getChildren().addAll(root);
+        //mainPane.setPadding(new Insets(0, 10, 10, 10));
+
+        mainPane.setStyle("-fx-background-color: #7b9acc;");
+       // mainPane.setPrefWidth(1900);
+
+
+        ScrollPane mainScrollPane = new ScrollPane(mainPane);
         mainScrollPane.setFitToWidth(true);
         mainScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        mainScrollPane.setStyle("-fx-background-color: #7b9acc;");
 
         return new Scene(mainScrollPane, 1900, 1000);
+    }
+     
+    private void openProfilePage() {
+        Profile profilePage = new Profile();
+        try {
+            profilePage.start(new Stage());
+            primaryStage.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openReelsPage() {
+        ReelsPage ReelsPage = new ReelsPage();
+        try {
+            ReelsPage.start(new Stage());
+            primaryStage.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private void openHomePage() {
+        
+    }
+
+
+    private void openMessagePage() {
+        MessagePage Msg = new MessagePage();
+        try {
+            Msg.start(new Stage());
+            primaryStage.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private static String toRgbString(Color color) {
@@ -189,8 +312,9 @@ public class Skills extends Application {
         card.setPrefWidth(300);
         card.setPadding(new Insets(10));
         card.setStyle("-fx-border-color: #ddd; -fx-border-width: 1; -fx-background-color: white; " +
-                "-fx-background-radius: 10; -fx-border-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 5);");
+                "-fx-background-radius: 10; -fx-border-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 10, 0, 0, 5);");
         card.setAlignment(Pos.TOP_CENTER);
+        
 
         addHoverEffect(card);
 
@@ -247,16 +371,19 @@ public class Skills extends Application {
             }
         });
 
-        // node.setOnMouseExited(e -> {
-        //     ScaleTransition st = new ScaleTransition(Duration.millis(200), node);
-        //     st.setToX(1);
-        //     st.setToY(1);
-        //     st.play();
+        node.setOnMouseExited(e -> {
+            ScaleTransition st = new ScaleTransition(Duration.millis(200), node);
+            st.setToX(1);
+            st.setToY(1);
+            st.play();
 
-        //     if (node instanceof Button) {
-        //         ((Button) node).setStyle("-fx-background-color: " + toRgbString(color1) + ";");
-        //     }
-        // });
+            if (node instanceof Button) {
+                ((Button) node).setStyle("-fx-background-color: " + toRgbString(color1) + ";" +
+                "-fx-background-radius: 20;" +
+                        "-fx-border-radius: 20;" +
+                        "-fx-padding: 10 20 10 20;");
+            }
+        });
     }
 
     private Scene createCourseDetailScene(String courseTitle, String imagePath, String description, String videoUrl) {

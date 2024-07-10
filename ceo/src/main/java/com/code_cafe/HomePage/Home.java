@@ -1,5 +1,7 @@
 package com.code_cafe.HomePage;
 
+
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -8,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.code_cafe.Database.User;
+import com.code_cafe.CoursesPage.Skills;
 import com.code_cafe.Database.Post;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.code_cafe.ProfilePage.Profile;
@@ -29,7 +32,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -47,14 +49,14 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 public class Home extends Application {
-    
+
     private ObservableList<FeedItem> feedItems = FXCollections.observableArrayList();
     private StackPane mainContent = new StackPane();
     private HBox navBar = new HBox(35);
     private Stage primaryStage;
-    Color color1 = Color.web("#6865aa"); 
-    Color color2 = Color.web("#a19ee3"); 
-    Color color3 = Color.web("#bdbaff"); 
+    Color color1 = Color.web("#6865aa");
+    Color color2 = Color.web("#a19ee3");
+    Color color3 = Color.web("#bdbaff");
 
     @Override
     public void start(Stage primaryStage) {
@@ -98,10 +100,9 @@ public class Home extends Application {
         HBox.setHgrow(leftSpacer, Priority.ALWAYS);
         HBox.setHgrow(rightSpacer, Priority.ALWAYS);
 
-       
         navBar.getChildren().addAll(msgIcon, leftSpacer, skills, disha, home, pitches, funding, rightSpacer, profileIcon);
 
-        VBox root = new VBox( mainContent);
+        VBox root = new VBox(mainContent);
         root.setPadding(new Insets(10));
         VBox.setVgrow(mainContent, Priority.ALWAYS);
         root.setPrefSize(1000, 990);
@@ -120,17 +121,13 @@ public class Home extends Application {
         imageDropShadow.setColor(Color.BLACK);
         womenImage.setEffect(imageDropShadow);
 
-        // VBox lady = new VBox(womenImage);
-        // lady.setLayoutX(1330);
-        // lady.setLayoutY(190);
-
         // Create background image view
         ImageView backgroundImageView = new ImageView(new Image("assets/images/bggg.jpg")); // Change to your background image path
         backgroundImageView.setFitWidth(1900);
         backgroundImageView.setFitHeight(1000);
         backgroundImageView.setOpacity(0.5);
 
-        Group group = new Group(backgroundImageView,navBar,root);
+        Group group = new Group(backgroundImageView, navBar, root);
         Scene scene = new Scene(group, 1900, 1000);
         scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
         scene.setFill(color3);
@@ -142,7 +139,7 @@ public class Home extends Application {
 
         home.setOnMouseClicked(event -> setContent(scrollPane, home));
         msgIcon.setOnMouseClicked(event -> openMessagePage());
-        skills.setOnMouseClicked(event -> setContent(createDummyContent("Skills Page"), skills));
+        skills.setOnMouseClicked(event -> openSkillsPage());
         disha.setOnMouseClicked(event -> setContent(createDummyContent("Disha Page"), disha));
         pitches.setOnMouseClicked(event -> setContent(createDummyContent("Pitches Page"), pitches));
         funding.setOnMouseClicked(event -> setContent(createDummyContent("Funding Page"), funding));
@@ -195,9 +192,9 @@ public class Home extends Application {
     }
 
     private void openReelsPage() {
-        ReelsPage ReelsPage = new ReelsPage();
+        ReelsPage reelsPage = new ReelsPage();
         try {
-            ReelsPage.start(new Stage());
+            reelsPage.start(new Stage());
             primaryStage.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -205,9 +202,19 @@ public class Home extends Application {
     }
 
     private void openMessagePage() {
-        MessagePage Msg = new MessagePage();
+        MessagePage msgPage = new MessagePage();
         try {
-            Msg.start(new Stage());
+            msgPage.start(new Stage());
+            primaryStage.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openSkillsPage() {
+        Skills skillsPage = new Skills();
+        try {
+            skillsPage.start(new Stage());
             primaryStage.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -236,14 +243,16 @@ public class Home extends Application {
                     ObjectMapper objectMapper = new ObjectMapper();
                     List<Post> posts = Arrays.asList(objectMapper.readValue(response.toString(), Post[].class));
 
-                    for(Post post : posts) {
-                        if (post.getContentImages() != null) {
-                            feedItems.add(new FeedItem(post.getUserName(), post.getUserType(), 
-                                          new Image(post.getProfileImage()), 
-                                          new Image(post.getContentImages()),
-                                          post.getLikes()));
+                    Platform.runLater(() -> {
+                        for (Post post : posts) {
+                            if (post.getContentImages() != null) {
+                                feedItems.add(new FeedItem(post.getUserName(), post.getUserType(),
+                                        new Image(post.getProfileImage(), 60, 60, true, true),
+                                        new Image(post.getContentImages(), 600, 600, true, true),
+                                        post.getLikes()));
+                            }
                         }
-                    }
+                    });
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -266,11 +275,25 @@ public class Home extends Application {
             this.likes = likes;
         }
 
-        public Image getPost() { return post; }
-        public String getAuthor() { return author; }
-        public String getContent() { return content; }
-        public Image getImage() { return image; }
-        public String getLikes() { return likes; }
+        public Image getPost() {
+            return post;
+        }
+
+        public String getAuthor() {
+            return author;
+        }
+
+        public String getContent() {
+            return content;
+        }
+
+        public Image getImage() {
+            return image;
+        }
+
+        public String getLikes() {
+            return likes;
+        }
     }
 
     private static class FeedItemCell extends ListCell<FeedItem> {
@@ -289,17 +312,15 @@ public class Home extends Application {
                 HBox userinfo = new HBox(5);
                 userinfo.setPadding(new Insets(0, 0, 0, 10));
                 VBox position = new VBox();
-                position.setPadding(new Insets(0,0,0,7));
-
+                position.setPadding(new Insets(0, 0, 0, 7));
 
                 Label authorLabel = new Label(item.getAuthor());
                 authorLabel.setStyle("-fx-font-weight: bold;");
-                authorLabel.setPadding(new Insets(13,0,0,0));
+                authorLabel.setPadding(new Insets(13, 0, 0, 0));
 
                 Label usertype = new Label(item.getContent());
                 usertype.setFont(Font.font("Times New Roman", 19));
                 usertype.setLayoutX(200);
-
 
                 ImageView profileView = new ImageView(item.getImage());
                 profileView.setFitHeight(60);
@@ -314,34 +335,27 @@ public class Home extends Application {
                 likebtn.setBackground(null);
                 Label likeLabel = new Label(item.getLikes());
                 likeLabel.setFont(Font.font("Times New Roman", FontWeight.BOLD, 19));
-                likeLabel.setPadding(new Insets(13,0,0,0));
+                likeLabel.setPadding(new Insets(13, 0, 0, 0));
 
-                HBox likes = new HBox(likebtn,likeLabel);
+                HBox likes = new HBox(likebtn, likeLabel);
 
-
-                position.getChildren().addAll(authorLabel,usertype);
+                position.getChildren().addAll(authorLabel, usertype);
                 position.setSpacing(7);
-                userinfo.getChildren().addAll(profileView,position);
-                
+                userinfo.getChildren().addAll(profileView, position);
 
-                
-               
                 ImageView postView = new ImageView(item.getPost());
                 postView.setFitHeight(600);
                 postView.setFitWidth(600);
                 postView.setX(50);
-                // postView.setPreserveRatio(true);
                 postView.setStyle("-fx-border-color: RED; -fx-border-radius: 10px; -fx-background-radius: 5px;");
-                VBox Postimg = new VBox(10,postView,likes);
-                Postimg.setPadding(new Insets(0,0,0,150));
-                
-               
-                card.getChildren().addAll(userinfo,Postimg);
+                VBox postImg = new VBox(10, postView, likes);
+                postImg.setPadding(new Insets(0, 0, 0, 150));
+
+                card.getChildren().addAll(userinfo, postImg);
                 card.setSpacing(30);
 
                 card.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, new CornerRadii(5), Insets.EMPTY)));
                 card.setStyle(" -fx-border-radius: 5px; -fx-background-radius: 5px;");
-
 
                 // Add drop shadow to FeedItem card
                 DropShadow dropShadow = new DropShadow();
@@ -349,7 +363,7 @@ public class Home extends Application {
                 dropShadow.setOffsetY(3);
                 dropShadow.setColor(Color.DARKGRAY);
                 card.setEffect(dropShadow);
-                
+
                 setGraphic(card);
                 setPrefHeight(800);
             }
@@ -357,6 +371,9 @@ public class Home extends Application {
     }
 
     public static void main(String[] args) {
+        // Set the maximum heap size to 1024 MB
+        // This can also be set in your IDE or by using the command line argument: -Xmx1024m
+        System.setProperty("java.vm.heap.size", "1024m");
         launch(args);
     }
 }
