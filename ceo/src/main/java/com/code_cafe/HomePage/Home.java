@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.code_cafe.ProfilePage.Profile;
 import com.code_cafe.ReelsPage.ReelsPage;
 import com.code_cafe.MessagePage.Message;
+import com.code_cafe.MessagePage.MessagePage;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -84,13 +85,13 @@ public class Home extends Application {
         navBar.setPrefWidth(1900);
         navBar.setEffect(dropShadow);
 
-        ImageView msgIcon = createImageView("/assets/message.png", 30, 40);
-        ImageView disha = createImageView("/assets/chatbot.png", 30, 40);
-        ImageView skills = createImageView("/assets/skill.png", 30, 40);
-        ImageView funding = createImageView("/assets/fund.png", 30, 40);
-        ImageView home = createImageView("/assets/home.png", 30, 40);
-        ImageView pitches = createImageView("/assets/trending.png", 30, 40);
-        ImageView profileIcon = createImageView("/assets/profile.gif", 40, 40);
+        ImageView msgIcon = createImageView("assets/message.png", 30, 40);
+        ImageView disha = createImageView("assets/chatbot.png", 30, 40);
+        ImageView skills = createImageView("assets/skill.png", 30, 40);
+        ImageView funding = createImageView("assets/fund.png", 30, 40);
+        ImageView home = createImageView("assets/home.png", 30, 40);
+        ImageView pitches = createImageView("assets/trending.png", 30, 40);
+        ImageView profileIcon = createImageView("assets/profile.gif", 40, 40);
 
         Region leftSpacer = new Region();
         Region rightSpacer = new Region();
@@ -107,7 +108,7 @@ public class Home extends Application {
         root.setLayoutY(88);
         root.setLayoutX(400);
 
-        Image women = new Image("/assets/images/ladyvideo.gif");
+        Image women = new Image("assets/images/ladyvideo.gif");
         ImageView womenImage = new ImageView(women);
         womenImage.setFitHeight(600);
         womenImage.setPreserveRatio(true);
@@ -124,7 +125,7 @@ public class Home extends Application {
         // lady.setLayoutY(190);
 
         // Create background image view
-        ImageView backgroundImageView = new ImageView(new Image("/assets/images/bggg.jpg")); // Change to your background image path
+        ImageView backgroundImageView = new ImageView(new Image("assets/images/bggg.jpg")); // Change to your background image path
         backgroundImageView.setFitWidth(1900);
         backgroundImageView.setFitHeight(1000);
         backgroundImageView.setOpacity(0.5);
@@ -204,9 +205,9 @@ public class Home extends Application {
     }
 
     private void openMessagePage() {
-        Message messagePage = new Message();
+        MessagePage Msg = new MessagePage();
         try {
-            messagePage.start(new Stage());
+            Msg.start(new Stage());
             primaryStage.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -304,7 +305,7 @@ public class Home extends Application {
                 profileView.setFitHeight(60);
                 profileView.setFitWidth(60);
 
-                Image like = new Image("/assets/images/like.gif");
+                Image like = new Image("assets/images/like.gif");
                 ImageView likeImage = new ImageView(like);
                 likeImage.setFitHeight(50);
                 likeImage.setFitWidth(50);

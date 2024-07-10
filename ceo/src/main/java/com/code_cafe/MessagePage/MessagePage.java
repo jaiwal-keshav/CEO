@@ -7,6 +7,8 @@ using this page.
 */
 package com.code_cafe.MessagePage;
 
+import com.code_cafe.HomePage.Home;
+
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -28,6 +30,8 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import com.code_cafe.HomePage.Home;
+
 public class MessagePage extends Application {
 
     private ObservableList<FeedItem> feedItems = FXCollections.observableArrayList(
@@ -47,6 +51,7 @@ public class MessagePage extends Application {
     private TextArea chatMessages; // Declare chatMessages as a class-level variable
     private Label chatLabel;
     private ImageView userImageView;
+    private Stage primaryStage;
 
     @Override
     public void start(Stage primaryStage) {
@@ -119,8 +124,10 @@ public class MessagePage extends Application {
                 messageInput.clear();
             }
         });
+        Button homeButton = new Button("Home");
+        homeButton.setOnAction(event -> returnToHome());
 
-        root.getChildren().addAll(userList, chatInterface);
+        root.getChildren().addAll(userList, chatInterface,homeButton);
         HBox.setHgrow(chatInterface, Priority.ALWAYS);
         userList.setMaxWidth(240);
         chatInterface.setMaxWidth(Double.MAX_VALUE);
@@ -169,7 +176,7 @@ public class MessagePage extends Application {
             }
         });
 
-        Scene scene = new Scene(borderPane, 1000, 800);
+        Scene scene = new Scene(borderPane, 1900, 1000);
         primaryStage.setScene(scene);
         primaryStage.setResizable(true);
         primaryStage.show();
@@ -215,6 +222,15 @@ public class MessagePage extends Application {
     private void clearChat() {
         // Clear chatMessages TextArea
         chatMessages.clear();
+    }
+    private void returnToHome() {
+        Home homePage = new Home();
+        try {
+            homePage.start(new Stage());
+            primaryStage.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {

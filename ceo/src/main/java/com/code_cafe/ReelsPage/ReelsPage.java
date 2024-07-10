@@ -51,19 +51,21 @@ import javafx.scene.Scene;
  
          // Load video files
          List<String> videoPaths = Arrays.asList(
-             getClass().getResource("/assets/videos/video.mp4").toExternalForm(),
+             getClass().getResource("/assets/videos/a.mp4").toExternalForm(),
+             getClass().getResource("/assets/videos/b.mp4").toExternalForm(),
+             getClass().getResource("/assets/videos/c.mp4").toExternalForm(),
+             getClass().getResource("/assets/videos/d.mp4").toExternalForm(),
+             getClass().getResource("/assets/videos/e.mp4").toExternalForm(),
+             getClass().getResource("/assets/videos/f.mp4").toExternalForm(),
+             getClass().getResource("/assets/videos/g.mp4").toExternalForm(),
+             getClass().getResource("/assets/videos/h.mp4").toExternalForm(),
+             getClass().getResource("/assets/videos/i.mp4").toExternalForm(),
+             getClass().getResource("/assets/videos/j.mp4").toExternalForm(),
              getClass().getResource("/assets/videos/k1.mp4").toExternalForm(),
-             getClass().getResource("/assets/videos/B.mp4").toExternalForm(),
-             getClass().getResource("/assets/videos/C.mp4").toExternalForm(),
-             getClass().getResource("/assets/videos/D.mp4").toExternalForm(),
-             getClass().getResource("/assets/videos/E.mp4").toExternalForm(),
-             getClass().getResource("/assets/videos/G.mp4").toExternalForm(),
-             getClass().getResource("/assets/videos/H.mp4").toExternalForm(),
-             getClass().getResource("/assets/videos/I.mp4").toExternalForm(),
-             getClass().getResource("/assets/videos/J.mp4").toExternalForm(),
-             getClass().getResource("/assets/videos/L.mp4").toExternalForm(),
-             getClass().getResource("/assets/videos/M.mp4").toExternalForm(),
-             getClass().getResource("/assets/videos/N.mp4").toExternalForm()
+             getClass().getResource("/assets/videos/l.mp4").toExternalForm(),
+             getClass().getResource("/assets/videos/m.mp4").toExternalForm(),
+             getClass().getResource("/assets/videos/n.mp4").toExternalForm(),
+             getClass().getResource("/assets/videos/l.mp4").toExternalForm()
          );
  
          // Create MediaPlayers for each video
@@ -84,12 +86,12 @@ import javafx.scene.Scene;
          showMediaPlayer(mediaPlayers.get(0));
          //reelsBox.setStyle("-fx-background-color:Black");
 
-         ImageView backgroundImageView = new ImageView(new Image("assets/images/2.jpg")); // Change to your background image path
-        backgroundImageView.setFitWidth(1900);
-        backgroundImageView.setFitHeight(1000);
-        backgroundImageView.setOpacity(0.8);
-         reelsBox.setLayoutX(500);
-        Group bg = new Group(backgroundImageView,reelsBox);
+        //  ImageView backgroundImageView = new ImageView(new Image("/assets/images/.jpg")); // Change to your background image path
+        // backgroundImageView.setFitWidth(1900);
+        // backgroundImageView.setFitHeight(1000);
+        // backgroundImageView.setOpacity(0.8);
+         reelsBox.setLayoutX(800);
+        Group bg = new Group(reelsBox);
          // Create and set the scene
          Scene scene = new Scene(bg, 1900, 1000);
          
@@ -160,9 +162,9 @@ import javafx.scene.Scene;
  
          // Create VBox to hold mediaAndButtonsBox and labels
          VBox contentContainer = new VBox(20, mediaAndButtonsBox, labelsBox, createNavigationButtons());
-         //contentContainer.setStyle("-fx-background-color: black;");
+         contentContainer.setStyle("-fx-background-color: #3C4046; -fx-background-radius:50;");
          contentContainer.setAlignment(Pos.CENTER);
-         contentContainer.setMinHeight(900);
+         contentContainer.setMinHeight(990);
          contentContainer.setMaxWidth(650);
  
          // Handle play/pause on click

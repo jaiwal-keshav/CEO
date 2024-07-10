@@ -1,5 +1,10 @@
-package com.code_cafe.ProfilePage;
+/*
+* author : Swapnali Patil
+* date : 4/07/2024
+* description : it is basically a User Profile page which consist of user information like Name-position and education.
+*/
 
+package com.code_cafe.ProfilePage;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,8 +24,13 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -30,6 +40,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.io.*;
@@ -40,257 +51,356 @@ public class Profile extends Application {
     // private List<EducationEntry> educationList = new ArrayList<>();
     private ObservableList<EducationEntry> observableEducationList;
 
+    Color color2 = Color.web("#E9F1FA"); // background
+    Color color1 = Color.web("#2272FF"); // button
+    Color color4 = Color.web("#313B5F"); // button
+    Color color5 = Color.web("#384D75"); // button
+    //Color color6 = Color.web("#EFF3FF"); // button
+    Color color6 = Color.web("#FCF6F5"); // button
+
+    // Color color1 = Color.web("#00ABE4");
+    Color color3 = Color.web("#A1D6E2"); // HBOX or VBox
+
     private Stage primaryStage;
     private String username;
     private String headline;
     private String aboutMe;
+    ImageView backgroundView;
+    ImageView profileView;
+
+    
 
     @Override
     public void start(Stage prStage) {
         this.primaryStage = prStage;
         showProfilePage();
+
+        
     }
 
+    
+    
     public void showProfilePage() {
+    primaryStage.setTitle("Profile Page");
+    primaryStage.setResizable(true);
 
-        primaryStage.setTitle("Profile Page");
-        // prStage.setWidth(1000);
-        // prStage.setHeight(1000);
-        primaryStage.setResizable(true);
+    observableEducationList = FXCollections.observableArrayList();
 
-        observableEducationList = FXCollections.observableArrayList();
+    Image background = new Image("assets/background1.png");
+     backgroundView = new ImageView(background);
+    backgroundView.setPreserveRatio(true);
 
-        Image ig = new Image("assets/background.png");
-        ImageView iv = new ImageView(ig);
-        iv.setPreserveRatio(true);
+    HBox hb = new HBox(backgroundView);
+    hb.setPrefSize(1800, 100);
+    hb.setStyle("-fx-background-color:SkyBlue");
+    hb.setAlignment(Pos.CENTER);
 
-        HBox hb = new HBox(iv);
-        // hb.setLayoutX(0);
-        hb.setPrefSize(1800, 100);
-        hb.setStyle("-fx-background-color:teal");
-        // hb.setPadding(new Insets(20,20,20,20));
-        hb.setAlignment(Pos.CENTER);
+    DropShadow imageDropShadow = new DropShadow();
+        imageDropShadow.setOffsetX(5);
+        imageDropShadow.setOffsetY(5);
+        imageDropShadow.setColor(Color.BLACK);
+    StackPane root = new StackPane(hb);
+   
+    StackPane.setMargin(hb, new Insets(30, 20, 0, 50));
 
-        StackPane root = new StackPane(hb);
-        StackPane.setMargin(hb, new Insets(30, 20, 0, 50));
+    Image profile = new Image("assets/swapnali2.jpg");
+    ImageView profileView = new ImageView(profile);
+    profileView.setFitHeight(500);
+    profileView.setFitWidth(500);
+    profileView.setPreserveRatio(true);
 
-        Image ig2 = new Image("assets/swapnali2.jpg");
-        ImageView iv2 = new ImageView(ig2);
-        iv2.setFitHeight(500);
-        iv2.setFitWidth(500);
-        iv2.setPreserveRatio(true);
-        // iv2.setLayoutX(700);
-        // iv2.setLayoutY(1000);
+    Circle clip = new Circle(150, 150, 150); // x, y, radius
+    profileView.setClip(clip);
 
-        Circle clip = new Circle(150, 150, 150); // x, y, radius
-        iv2.setClip(clip);
+    Circle borderCircle = new Circle(157, 157, 157); // centerX, centerY, radius
+    borderCircle.setStroke(Color.RED); // Set the border color
+    borderCircle.setStrokeWidth(6); // Set the border width
+    borderCircle.setFill(null);
 
-        Circle borderCircle = new Circle(157, 157, 157); // centerX, centerY, radius
-        borderCircle.setStroke(Color.RED); // Set the border color
-        borderCircle.setStrokeWidth(6); // Set the border width
-        borderCircle.setFill(null);
+    StackPane sp = new StackPane();
+    sp.getChildren().addAll(borderCircle, profileView);
+    StackPane.setMargin(profileView, new Insets(200, 800, 200, 100));
+    StackPane.setMargin(borderCircle, new Insets(-200, 0, 0, -780));
+    
 
-        StackPane sp = new StackPane();
-        sp.getChildren().addAll(borderCircle, iv2);
-        StackPane.setMargin(iv2, new Insets(200, 800, 200, 100));
-        StackPane.setMargin(borderCircle, new Insets(-200, 0, 0, -780));
+    DropShadow imageDropShadow1 = new DropShadow();
+        imageDropShadow1.setOffsetX(2);
+        imageDropShadow1.setOffsetY(2);
+        imageDropShadow1.setColor(Color.BLACK);
 
-        Text username = new Text("Swapnali Patil");
-        username.setFont(Font.font("Arial", FontWeight.BOLD, 30));
+    Image camera = new Image("assets/camera1.png");
+    ImageView cameraView = new ImageView(camera);
+    cameraView.setFitHeight(50);
+    cameraView.setFitWidth(50);
+    cameraView.setPreserveRatio(true);
+    cameraView.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
+    cameraView.setLayoutY(420);
+    cameraView.setLayoutX(60);
+    cameraView.setEffect(imageDropShadow1);
 
-        // username.setLayoutX(150);
-        // username.setLayoutY(600);
+    // Add action to the camera icon
+    cameraView.setOnMouseClicked(event -> openPhotoChangeDialog());
+    
 
-        Text headline = new Text("Entrepreneur");
-        headline.setFont(Font.font("Arial", FontWeight.BOLD, 30));
+    
 
-        VBox vb = new VBox(10, username, headline);
-        vb.setLayoutX(150);
-        vb.setLayoutY(530);
-        vb.setAlignment(Pos.CENTER);
+    Text username = new Text("Swapnali Patil");
+    username.setFont(Font.font("Arial", FontWeight.BOLD, 30));
 
-        TextField usernameField = new TextField(username.getText());
-        usernameField.setFont(Font.font("Arial", FontWeight.BOLD, 30));
-        usernameField.setVisible(false);
-        usernameField.setLayoutX(100);
-        usernameField.setLayoutY(620);
+    Text headline = new Text("Entrepreneur");
+    headline.setFont(Font.font("Arial", FontWeight.BOLD, 30));
 
-        TextField headlineField = new TextField();
-        headlineField.setFont(Font.font("Arial", FontWeight.BOLD, 30));
-        headlineField.setVisible(false);
-        headlineField.setLayoutX(100);
-        headlineField.setLayoutY(620);
+    VBox vb = new VBox(10, username, headline);
+    vb.setLayoutX(150);
+    vb.setLayoutY(530);
+    vb.setAlignment(Pos.CENTER);
+    vb.setStyle(
+            
+                    "-fx-text-fill: black;" +
+                    "-fx-background-radius: 20;" +
+                    "-fx-border-radius: 20;" +
+                    "-fx-padding: 10 20 10 20;");
 
-        Text aboutMeLabel = new Text("About Me:");
-        aboutMeLabel.setFont(Font.font("Arial", FontWeight.BOLD, 24));
-        aboutMeLabel.setLayoutX(500);
-        aboutMeLabel.setLayoutY(500);
+    TextField usernameField = new TextField(username.getText());
+    usernameField.setFont(Font.font("Arial", FontWeight.BOLD, 30));
+    usernameField.setVisible(false);
+    usernameField.setLayoutX(100);
+    usernameField.setLayoutY(620);
 
-        // Text aboutMe = new Text ("Short introduction about the user");
-        // aboutMe.setFont(Font.font("Arial", 20));
-        // aboutMe.setWrappingWidth(500);
-        // aboutMe.setLayoutX(500);
-        // aboutMe.setLayoutY(550);// Set width for text wrapping
+    TextField headlineField = new TextField();
+    headlineField.setFont(Font.font("Arial", FontWeight.BOLD, 30));
+    headlineField.setVisible(false);
+    headlineField.setLayoutX(100);
+    headlineField.setLayoutY(620);
 
-        TextArea aboutMeField = new TextArea("Short introduction about the user.");
-        aboutMeField.setFont(Font.font("Arial", 18));
-        aboutMeField.setWrapText(true);
-        aboutMeField.setEditable(false);
-        aboutMeField.setPrefWidth(1200);
-        aboutMeField.setPrefHeight(100);
-        aboutMeField.setLayoutX(500);
-        aboutMeField.setLayoutY(520);
+    Text aboutMeLabel = new Text("About Me:");
+    aboutMeLabel.setFont(Font.font("Arial", FontWeight.BOLD, 24));
+    aboutMeLabel.setLayoutX(500);
+    aboutMeLabel.setLayoutY(500);
+    aboutMeLabel.setStyle("-fx-text-fill: white;");
 
-        // Create TextArea for editing the "About Me" section
-        // TextArea aboutMeField = new TextArea(aboutMe.getText());
-        // aboutMeField.setFont(Font.font("Arial", 20));
-        // aboutMeField.setVisible(false);
-        // aboutMeField.setWrapText(true);
-        // aboutMeField.setPrefRowCount(3);
-        // aboutMeField.setLayoutX(500);
-        // aboutMeField.setLayoutY(700);
+    TextArea aboutMeField = new TextArea("Short introduction about the user.");
+    aboutMeField.setFont(Font.font("Arial", 18));
+    aboutMeField.setWrapText(true);
+    aboutMeField.setEditable(false);
+    aboutMeField.setPrefWidth(1200);
+    aboutMeField.setPrefHeight(100);
+    aboutMeField.setLayoutX(500);
+    aboutMeField.setLayoutY(520);
 
-        Image ig3 = new Image("assets/edit2.png");
-        ImageView iv3 = new ImageView(ig3);
-        iv3.setFitWidth(50);
-        iv3.setFitHeight(50);
-        // iv3.setLayoutX(1800);
-        // iv3.setLayoutY(530);
+    Image ig3 = new Image("assets/edit2.png");
+    ImageView iv3 = new ImageView(ig3);
+    iv3.setFitWidth(50);
+    iv3.setFitHeight(50);
+    iv3.setEffect(imageDropShadow);
 
-        Button editbtn = new Button();
-        editbtn.setGraphic(iv3);
-        editbtn.setStyle("-fx-background-color: transparent;");
-        editbtn.setLayoutX(10);
-        editbtn.setLayoutY(530);
+    Button editbtn = new Button();
+    editbtn.setGraphic(iv3);
+    editbtn.setLayoutX(10);
+    editbtn.setLayoutY(530);
+    editbtn.setStyle(
+            "-fx-background-color: " + toRgbString(color1) + ";" +
+                    "-fx-text-fill: white;" +
+                    "-fx-background-radius: 20;" +
+                    "-fx-border-radius: 20;" +
+                    "-fx-padding: 10 20 10 20;");
 
-        editbtn.setOnAction(e -> openEditDialog(username, headline, aboutMeField));
+    editbtn.setOnAction(e -> openEditDialog(username, headline, aboutMeField));
 
-        // editbtn.setOnAction(new EventHandler<ActionEvent>() {
-        // public void handle(ActionEvent event){
-        // System.out.println("Button clicked");
+    Image people = new Image("assets/connected1.png");
+    ImageView pview = new ImageView(people);
+    pview.setFitWidth(50);
+    pview.setFitHeight(50);
 
-        // usernameField.setVisible(true);
-        // usernameField.setText(username.getText());
-        // username.setVisible(true);
+    Button following = new Button(" Connections");
+    following.setGraphic(pview);
+    following.setFont(Font.font(25));
+    //following.setOnAction(e -> openDummy(primaryStage));
+    following.setStyle(
+            "-fx-background-color: " + toRgbString(color6) + ";" +
+                    "-fx-text-fill: black;" +
+                    "-fx-background-radius: 20;" +
+                    "-fx-border-radius: 20;" +
+                    "-fx-padding: 10 20 10 20;");
+    following.setEffect(imageDropShadow);
+    following.setOnMouseEntered(e -> following.setStyle(
+            "-fx-background-color: " + toRgbString(color6.darker()) + ";" +
+                    "-fx-background-radius: 20;"));
+    following.setOnMouseExited(e -> following.setStyle(
+            "-fx-background-color: " + toRgbString(color6) + ";" +
+                    "-fx-background-radius: 20;"));
 
-        // headlineField.setVisible(true);
-        // headlineField.setText(headline.getText());
-        // headline.setVisible(true);
+    HBox connectbox = new HBox(following);
+    connectbox.setLayoutX(140);
+    connectbox.setLayoutY(780);
+    connectbox.setPrefSize(1000, 50);
 
-        // // aboutMeField.setVisible(true);
-        // // aboutMeField.setText(aboutMe.getText());
-        // // aboutMe.setVisible(false);
+    Image post = new Image("assets/post.png");
+    ImageView postview = new ImageView(post);
+    postview.setFitWidth(50);
+    postview.setFitHeight(50);
 
-        // usernameField.requestFocus();
-        // }
-        // });
+    
+        
 
-        // usernameField.setOnAction(e -> {
-        // username.setText(usernameField.getText());
-        // username.setVisible(true);
-        // usernameField.setVisible(false);
+    Button postbtn = new Button(" Create Post ");
+    postbtn.setGraphic(postview);
+    postbtn.setFont(Font.font(25));
+    postbtn.setStyle(
+            "-fx-background-color: " + toRgbString(color6) + ";" +
+                    "-fx-text-fill: black;" +
+                    "-fx-background-radius: 20;" +
+                    "-fx-border-radius: 20;" +
+                    "-fx-padding: 10 20 10 20;");
+                    postbtn.setEffect(imageDropShadow);
 
-        // });
+    postbtn.setOnMouseEntered(e -> postbtn.setStyle(
+            "-fx-background-color: " + toRgbString(color6.darker()) + ";" +
+                    "-fx-background-radius: 20;"));
+    postbtn.setOnMouseExited(e -> postbtn.setStyle(
+            "-fx-background-color: " + toRgbString(color6) + ";" +
+                    "-fx-background-radius: 20;"));
 
-        // headlineField.setOnAction(e -> {
-        // headline.setText(headlineField.getText());
-        // headline.setVisible(true);
-        // headlineField.setVisible(false);
-        // });
+    HBox postbox = new HBox(postbtn);
+    postbox.setLayoutX(140);
+    postbox.setLayoutY(680);
+    postbox.setPrefSize(1030, 50);
+    //postbox.setOpacity(0.78);
 
-        // Button saveAboutMeBtn = new Button("Save");
-        // saveAboutMeBtn.setOnAction(e -> {
-        // aboutMeField.setEditable(false);
-        // });
+    Label Education = new Label("Education:");
+    Education.setFont(Font.font("Arial", FontWeight.BOLD, 24));
+    Education.setLayoutX(500);
+    Education.setLayoutY(700);
+    Label educationLabel = new Label("Education:");
+    educationLabel.setFont(Font.font("Arial", FontWeight.BOLD, 24));
 
-        Image people = new Image("assets/connected1.png");
-        ImageView pview = new ImageView(people);
-        pview.setFitWidth(50);
-        pview.setFitHeight(50);
+    Button addEducationButton = new Button("+");
+    addEducationButton.setOnAction(e -> addEducationEntry());
+    HBox educationHeader = new HBox(10, educationLabel, addEducationButton);
+    educationHeader.setAlignment(Pos.CENTER_LEFT);
+    educationHeader.setPadding(new Insets(0,0,0,10));
+    addEducationButton.setStyle(
+            "-fx-background-color: " + toRgbString(color1) + ";" +
+                    "-fx-text-fill: white;" +
+                    "-fx-background-radius: 20;" +
+                    "-fx-border-radius: 20;");
+                    addEducationButton.setEffect(imageDropShadow);
 
-        Button following = new Button(" Connections");
-        following.setGraphic(pview);
-        following.setFont(Font.font(25));
-        //following.setOnAction(e -> openDummy(primaryStage));
+    VBox educationEntriesContainer = new VBox(10);
+    educationEntriesContainer.setPadding(new Insets(10));
+    observableEducationList.addListener((javafx.beans.Observable observable) -> {
+        educationEntriesContainer.getChildren().clear();
+        for (EducationEntry entry : observableEducationList) {
+            VBox entryBox = createEducationEntryBox(entry);
+            educationEntriesContainer.getChildren().add(entryBox);
+        }
+    });
 
-        HBox connectbox = new HBox(following);
-        connectbox.setLayoutX(140);
-        connectbox.setLayoutY(780);
-        connectbox.setPrefSize(1000, 50);
+    VBox educationSection = new VBox(10, educationHeader, educationEntriesContainer);
+    educationSection.setPadding(new Insets(10));
+    educationSection.setPrefSize(500, 500);
+    educationSection.setPadding(new Insets(0,0,0,10));
 
-        Image post = new Image("assets/post.png");
-        ImageView postview = new ImageView(post);
-        postview.setFitWidth(50);
-        postview.setFitHeight(50);
+    VBox mainContent = new VBox(10, sp, vb, aboutMeLabel, aboutMeField, connectbox, educationSection);
+    mainContent.setPadding(new Insets(20));
+    mainContent.setLayoutX(470);
+    mainContent.setLayoutY(700);
+    mainContent.setPrefSize(500, 200);
+    //mainContent.setStyle("-fx-background-color: " + toRgbString(color2) + ";");
+    
+    Group gr = new Group(root, sp,cameraView, vb, usernameField, headlineField, aboutMeLabel, aboutMeField, iv3, editbtn,
+            connectbox, postbox, mainContent);
+    ScrollPane scrollPane = new ScrollPane(gr);
+    scrollPane.setFitToWidth(true);
+    scrollPane.setStyle("-fx-background-color:#7b9acc");
+    BorderPane profilePane = new BorderPane();
+    profilePane.setCenter(scrollPane);
+    profilePane.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
 
-        Button postbtn = new Button(" Create Post ");
-        postbtn.setGraphic(postview);
-        postbtn.setFont(Font.font(25));
+    Scene scene = new Scene(profilePane, 1900, 1000);
+    primaryStage.setScene(scene);
+    //scene.setFill(Color.LIGHTGRAY);
+    
+    
 
-        HBox postbox = new HBox(postbtn);
-        postbox.setLayoutX(140);
-        postbox.setLayoutY(680);
-        postbox.setPrefSize(1030, 50);
+    
+    primaryStage.show();
+}
 
-        Label Education = new Label("Education:");
-        Education.setFont(Font.font("Arial", FontWeight.BOLD, 24));
-        Education.setLayoutX(500);
-        Education.setLayoutY(700);
-        Label educationLabel = new Label("Education:");
-        educationLabel.setFont(Font.font("Arial", FontWeight.BOLD, 24));
+// Open dialog for photo change
+private void openPhotoChangeDialog() {
+    Stage dialog = new Stage();
+    dialog.initModality(Modality.APPLICATION_MODAL);
+    dialog.initOwner(primaryStage);
 
-        Button addEducationButton = new Button("+");
-        addEducationButton.setOnAction(e -> addEducationEntry());
-        HBox educationHeader = new HBox(10, educationLabel, addEducationButton);
-        educationHeader.setAlignment(Pos.CENTER_LEFT);
+    VBox dialogVbox = new VBox(20);
+    dialogVbox.setAlignment(Pos.CENTER);
 
-        VBox educationEntriesContainer = new VBox(10);
-        educationEntriesContainer.setPadding(new Insets(10));
-        observableEducationList.addListener((javafx.beans.Observable observable) -> {
-            educationEntriesContainer.getChildren().clear();
-            for (EducationEntry entry : observableEducationList) {
-                VBox entryBox = createEducationEntryBox(entry);
-                educationEntriesContainer.getChildren().add(entryBox);
-            }
-        });
+    Button changeProfilePhotoButton = new Button("Change Profile Photo");
+    changeProfilePhotoButton.setOnAction(event -> {
+        dialog.close();
+        choosePhoto("profile");
+    });
 
-        VBox educationSection = new VBox(10, educationHeader, educationEntriesContainer);
-        educationSection.setPadding(new Insets(10));
-        educationSection.setPrefSize(500, 500);
+    Button changeBackgroundPhotoButton = new Button("Change Background Photo");
+    changeBackgroundPhotoButton.setOnAction(event -> {
+        dialog.close();
+        choosePhoto("background");
+    });
 
-        VBox mainContent = new VBox(10, sp, vb, aboutMeLabel, aboutMeField, connectbox, educationSection);
-        mainContent.setPadding(new Insets(20));
-        mainContent.setLayoutX(470);
-        mainContent.setLayoutY(700);
-        mainContent.setPrefSize(500, 200);
+    dialogVbox.getChildren().addAll(changeProfilePhotoButton, changeBackgroundPhotoButton);
 
-        Image photo = new Image("assets/background.png");
-        ImageView view = new ImageView(photo);
-        view.setLayoutX(500);
-        view.setLayoutY(1500);
+    Scene dialogScene = new Scene(dialogVbox, 300, 200);
+    dialog.setScene(dialogScene);
+    dialog.show();
+}
 
-        Group gr = new Group(root, sp, vb, usernameField, headlineField, aboutMeLabel, aboutMeField, iv3, editbtn,
-                connectbox, postbox, mainContent, view);
-        gr.setStyle("-fx-background-color: ;");
 
-        ScrollPane scrollPane = new ScrollPane();
-        scrollPane.prefHeight(1000);
-        scrollPane.prefWidth(100);
-        scrollPane.setContent(gr);
-        // scrollPane.setContent(mainContent);
-        scrollPane.setFitToWidth(true); // Ensure it fits to the width of the content
-        scrollPane.setFitToHeight(false); // Disable fitting to the height
-        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER); // Disable horizontal scrollbar
-        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        // scrollPane.setStyle("-fx-background: teal;");
+// Open file chooser for selecting a photo
+private void choosePhoto(String type) {
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.getExtensionFilters().add(
+            new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
+    );
+    File selectedFile = fileChooser.showOpenDialog(primaryStage);
+    if (selectedFile != null) {
+        if (type.equals("profile")) {
+            // Handle profile photo change
+            updateProfilePhoto(selectedFile);
+        } else if (type.equals("background")) {
+            // Handle background photo change
+            updateBackgroundPhoto(selectedFile);
+        }
+    }
+}
 
-        scrollPane.setStyle("-fx-background: beige; -fx-background-color: beige;");
+    // Update profile photo
+    private void updateProfilePhoto(File file) {
+        try {
+            Image newImage = new Image(file.toURI().toURL().toString());
+            profileView.setImage(newImage);
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Handle the error (e.g., show a message to the user)
+        }
+    }
 
-        Scene prScene = new Scene(scrollPane, 1900, 1000);
-        prScene.setFill(Color.BEIGE);
-        primaryStage.setScene(prScene);
-        primaryStage.show();
+    // Update background photo
+    private void updateBackgroundPhoto(File file) {
+        try {
+            Image newImage = new Image(file.toURI().toURL().toString());
+            backgroundView.setImage(newImage);
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Handle the error (e.g., show a message to the user)
+        }
+    }
 
+    private static String toRgbString(Color color) {
+        return String.format("rgb(%d, %d, %d)",
+                (int) (color.getRed() * 255),
+                (int) (color.getGreen() * 255),
+                (int) (color.getBlue() * 255));
     }
 
     // dialog box of editing username, headline and about me
@@ -338,6 +448,11 @@ public class Profile extends Application {
     // edit education info
     private VBox createEducationEntryBox(EducationEntry entry) {
 
+        DropShadow imageDropShadow = new DropShadow();
+        imageDropShadow.setOffsetX(5);
+        imageDropShadow.setOffsetY(5);
+        imageDropShadow.setColor(Color.BLACK);
+
         VBox entryBox = new VBox(10);
         entryBox.setPadding(new Insets(5));
         entryBox.setStyle("-fx-border-color: lightgray; -fx-border-width: 1px; -fx-border-radius: 5px;");
@@ -347,10 +462,12 @@ public class Profile extends Application {
         ImageView logoImageView = new ImageView(educationLogo);
         logoImageView.setFitWidth(50);
         logoImageView.setFitHeight(50);
+        logoImageView.setEffect(imageDropShadow);
 
         Label institutionLabel = new Label(entry.getInstitutionName());
         institutionLabel.setFont(Font.font("Arial", FontWeight.BOLD, 20));
         institutionLabel.setAlignment(Pos.CENTER_LEFT);
+        institutionLabel.setStyle("-fx-text-fill: black;");
 
         Label degreeLabel = new Label(entry.getDegree() + " - " + entry.getFieldOfStudy());
         degreeLabel.setFont(Font.font("Arial", 20));

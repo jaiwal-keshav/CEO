@@ -2,6 +2,8 @@ package com.code_cafe.ProfilePage;
 
 
 
+
+
 public class EducationEntry {
     private String institutionName;
     private String degree;
@@ -58,6 +60,5 @@ public class EducationEntry {
         this.endDate = endDate;
     }
 }
-
 
 
